@@ -1,0 +1,8 @@
+<launch>
+    <!-- output="screen" will output to cmd window. to open in new window, launch-prefix="gnome-terminal" -->
+    <node name="RosAria" pkg="rosaria" type="RosAria"/>
+    <node name="drive_pub" pkg="qbot" type="drive_pub.py"/>
+    <node name="controller_pub" pkg="qbot" type ="cntrl_pub.py"/>
+    <node name="drive_controller" pkg="qbot" type="qbot_drive.py" output="screen"/>
+    <node name="actuator_motor_controller" pkg="qbot" type="act_motor_sub.py"/>
+</launch>
