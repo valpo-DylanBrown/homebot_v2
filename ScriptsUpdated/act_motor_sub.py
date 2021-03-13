@@ -13,13 +13,16 @@ SM_ACT_RETRACT = 8
 MOTOR_ENA1 = 38
 MOTOR_ON = 11
 MOTOR_OFF = 15
+DEADZONE_HIGH = 9
+DEADZONE_LOW = 6
+
 def ch3_state_callback(msg):
     global lg_act_on
-    if msg.data > 8.5:
+    if msg.data > DEADZONE_HIGH:
       gpio.output(LG_ACT_RETRACT, gpio.LOW)
       gpio.output(LG_ACT_EXTEND, gpio.HIGH)
       lg_act_on = 1
-    elif msg.data < 6.5:
+    elif msg.data < DEADZONE_LOW:
       gpio.output(LG_ACT_EXTEND, gpio.LOW)
       gpio.output(LG_ACT_RETRACT, gpio.HIGH)
       lg_act_on = 1
@@ -28,21 +31,26 @@ def ch3_state_callback(msg):
       gpio.output(LG_ACT_RETRACT, gpio.LOW)
       lg_act_on = 0
 def ch5_state_callback(msg):
-    if msg.data > 8.5:
+    if msg.data > DEADZONE_HIGH:
       gpio.output(SM_ACT_EXTEND, gpio.LOW)
       gpio.output(SM_ACT_RETRACT, gpio.HIGH)
-    elif msg.data < 6.5:
+    elif msg.data < DEADZONE_LOW:
       gpio.output(SM_ACT_RETRACT, gpio.LOW)
       gpio.output(SM_ACT_EXTEND, gpio.HIGH)
     else:
       gpio.output(SM_ACT_RETRACT, gpio.LOW)
       gpio.output(SM_ACT_EXTEND, gpio.LOW)
 def ch4_state_callback(msg):
-    if msg.data > 8.5:
+    global lg_act_on
+    if lg_act_on:
+        gpio.output(MOTOR_ENA1, gpio.LOW)
+        gpio.output(MOTOR_OFF, gpio.LOW)
+        gpio.output(MOTOR_ON, gpio.LOW)
+    elif msg.data > DEADZONE_HIGH:
       gpio.output(MOTOR_ENA1, gpio.HIGH)
       gpio.output(MOTOR_OFF, gpio.LOW)
       gpio.output(MOTOR_ON, gpio.HIGH)
-    elif msg.data < 6.5:
+    elif msg.data < DEADZONE_LOW:
       gpio.output(MOTOR_ENA1, gpio.HIGH)
       gpio.output(MOTOR_ON, gpio.LOW)
       gpio.output(MOTOR_OFF, gpio.HIGH)

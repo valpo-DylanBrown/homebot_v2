@@ -10,11 +10,13 @@ import rospy
 from geometry_msgs.msg import Twist
 
 import sys, select, termios, tty
-import signal 
+import signal
 global ch1_movement
 global ch2_movement
+global sens1_dist
 ch1_movement = 0
 ch2_movement = 0
+sens1_dist = 0
 def signal_handler(signal, frame): # ctrl + c -> exit program
     print('You pressed Ctrl+C!')
     #gpio.cleanup()
@@ -122,6 +124,10 @@ def ch2_state_callback(msg):
         ch2_movement = -1
     else:
         ch2_movement = 0
+# TODO do something with this data.
+def sens1_dist_callback(msg):
+    global sens1_dist
+    sens1_dist = msg.data
 
 if __name__=="__main__":
 
@@ -141,6 +147,7 @@ if __name__=="__main__":
     th = 0
     rospy.Subscriber('ch1_state', Float32, ch1_state_callback)
     rospy.Subscriber('ch2_state', Float32, ch2_state_callback)
+    rospy.subscriber('sens1_dist', Float32, sens1_dist_callback)
 
     try:
         pub_thread.wait_for_subscribers()
@@ -154,7 +161,7 @@ if __name__=="__main__":
             pub_thread.update(x, th)
     except(KeyboardInterrupt, SystemExit):
         print("requested stop")
-        
+
     except Exception as e:
         print(e)
 
