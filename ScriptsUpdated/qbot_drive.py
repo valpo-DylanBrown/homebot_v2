@@ -147,7 +147,7 @@ if __name__=="__main__":
     th = 0
     rospy.Subscriber('ch1_state', Float32, ch1_state_callback)
     rospy.Subscriber('ch2_state', Float32, ch2_state_callback)
-    rospy.subscriber('sens1_dist', Float32, sens1_dist_callback)
+    rospy.Subscriber('sens1_dist', Float32, sens1_dist_callback)
 
     try:
         pub_thread.wait_for_subscribers()
