@@ -13,10 +13,13 @@ import sys, select, termios, tty
 import signal
 global ch1_movement
 global ch2_movement
-global sens1_dist
+global BL_dist
 ch1_movement = 0
 ch2_movement = 0
-sens1_dist = 0
+BL_dist = 0
+
+BACK_SENSOR_THRESHOLD = 50
+
 def signal_handler(signal, frame): # ctrl + c -> exit program
     print('You pressed Ctrl+C!')
     #gpio.cleanup()
@@ -125,9 +128,9 @@ def ch2_state_callback(msg):
     else:
         ch2_movement = 0
 # TODO do something with this data.
-def sens1_dist_callback(msg):
-    global sens1_dist
-    sens1_dist = msg.data
+def BL_dist_callback(msg):
+    global BL_dist
+    BL_dist = msg.data
 
 if __name__=="__main__":
 
@@ -147,18 +150,23 @@ if __name__=="__main__":
     th = 0
     rospy.Subscriber('ch1_state', Float32, ch1_state_callback)
     rospy.Subscriber('ch2_state', Float32, ch2_state_callback)
-    rospy.Subscriber('sens1_dist', Float32, sens1_dist_callback)
+    rospy.Subscriber('BL_dist', Float32, BL_dist_callback)
 
     try:
         pub_thread.wait_for_subscribers()
         pub_thread.update(x, th)
         while(1):
+          if(BL_dist <= BACK_SENSOR_THRESHOLD):
+            pub_thread.update(0,0)
+            continue
+          else:
             x = ch2_movement
             if(x == -1):
                 th = x * ch1_movement
             else:
                 th = ch1_movement
             pub_thread.update(x, th)
+            #print("Sensor 1 dist: ", sens1_dist)
     except(KeyboardInterrupt, SystemExit):
         print("requested stop")
 
