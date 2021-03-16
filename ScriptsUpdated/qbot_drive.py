@@ -14,11 +14,13 @@ import signal
 global ch1_movement
 global ch2_movement
 global BL_dist
+global FR_dist
 ch1_movement = 0
 ch2_movement = 0
 BL_dist = 0
-
+FR_dist = 0
 BACK_SENSOR_THRESHOLD = 50
+FRONT_SENSOR_THRESHOLD = 50
 
 def signal_handler(signal, frame): # ctrl + c -> exit program
     print('You pressed Ctrl+C!')
@@ -131,6 +133,9 @@ def ch2_state_callback(msg):
 def BL_dist_callback(msg):
     global BL_dist
     BL_dist = msg.data
+def BL_dist_callback(msg):
+    global FR_dist
+    FR_dist = msg.data
 
 if __name__=="__main__":
 
@@ -151,6 +156,7 @@ if __name__=="__main__":
     rospy.Subscriber('ch1_state', Float32, ch1_state_callback)
     rospy.Subscriber('ch2_state', Float32, ch2_state_callback)
     rospy.Subscriber('BL_dist', Float32, BL_dist_callback)
+    rospy.Subscriber('FR_dist', Float32, FR_dist_callback)
 
     try:
         pub_thread.wait_for_subscribers()
@@ -158,6 +164,11 @@ if __name__=="__main__":
         while(1):
           if(BL_dist <= BACK_SENSOR_THRESHOLD):
             pub_thread.update(0,0)
+            print("back left triggered")
+            continue
+          if(FR_dist <= FRONT_SENSOR_THRESHOLD):
+            pub_thread.update(0,0)
+            print("front right triggered")
             continue
           else:
             x = ch2_movement
