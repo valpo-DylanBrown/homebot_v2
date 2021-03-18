@@ -5,11 +5,10 @@ import RPi.GPIO as gpio
 from datetime import datetime
 from time import sleep, time
 
-CH1 = 3
-CH2 = 7
-CH3 = 12
-CH4 = 13
-CH5 = 16
+
+CH3 = 31
+CH4 = 29
+CH5 = 23
 
 CUTOFF_MIN = 4
 CUTOFF_MAX = 11
@@ -104,7 +103,6 @@ if __name__ == '__main__':
   gpio.add_event_detect(CH3, gpio.BOTH, callback=ch3_edgeDetected)
   gpio.add_event_detect(CH5, gpio.BOTH, callback=ch5_edgeDetected)
   #rate = rospy.Rate(100)
-  
   while not rospy.is_shutdown():
     #rate.sleep()
     st = .2
@@ -119,7 +117,6 @@ if __name__ == '__main__':
         ch4_pub.publish(ch4_dutycycle)
     if(ch5_dutycycle > CUTOFF_MIN and ch5_dutycycle < CUTOFF_MAX):
         ch5_pub.publish(ch5_dutycycle)
-    
     ch4_risingCount = 0
     ch3_risingCount = 0
     ch5_risingCount = 0

@@ -7,10 +7,10 @@ import signal
 import time
  
 SONAR_SPEED = 34300
-BL_TRIG = 31
-BL_ECHO = 29
-FR_TRIG = 1
-FR_ECHO = 2
+BL_TRIG = 32
+BL_ECHO = 26
+#FR_TRIG = 1
+#FR_ECHO = 2
  
 def signal_handler(signal, frame): # ctrl + c -> exit program
     print('You pressed Ctrl+C!')
@@ -40,13 +40,13 @@ if __name__ == '__main__':
     rospy.init_node('sensor_publisher')
     signal.signal(signal.SIGINT, signal_handler)
     bl_pub = rospy.Publisher('BL_dist', Float32, queue_size=1) 
-    fr_pub = rospy.Publisher('FR_dist', Float32, queue_size=1)
+    #fr_pub = rospy.Publisher('FR_dist', Float32, queue_size=1)
     
     gpio.setmode(gpio.BOARD)
     gpio.setup(BL_TRIG, gpio.OUT)
     gpio.setup(BL_ECHO, gpio.IN)
-    gpio.setup(FR_TRIG, gpio.OUT)
-    gpio.setup(FR_ECHO, gpio.IN)
+    #gpio.setup(FR_TRIG, gpio.OUT)
+    #gpio.setup(FR_ECHO, gpio.IN)
     
     rate = rospy.Rate(15)
     try:
@@ -55,8 +55,8 @@ if __name__ == '__main__':
             
             bl_distance = get_sensor_distance(BL_TRIG, BL_ECHO)
             bl_pub.publish(bl_distance)
-            fr_distance = get_sensor_distance(FR_TRIG, FR_ECHO)
-            fr_pub.publish(fr_distance)
+            #fr_distance = get_sensor_distance(FR_TRIG, FR_ECHO)
+            #fr_pub.publish(fr_distance)
             rate.sleep()
             
     except(KeyboardInterrupt, SystemExit):

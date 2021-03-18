@@ -7,11 +7,11 @@ global lg_act_on
 lg_act_on = 0
 
 LG_ACT_EXTEND = 5
-LG_ACT_RETRACT = 40
+LG_ACT_RETRACT = 7
 SM_ACT_EXTEND = 10
 SM_ACT_RETRACT = 8
-MOTOR_ENA1 = 38
-MOTOR_ON = 11
+MOTOR_ENA1 = 11
+MOTOR_ON = 13
 MOTOR_OFF = 15
 DEADZONE_HIGH = 9
 DEADZONE_LOW = 6
@@ -31,10 +31,10 @@ def ch3_state_callback(msg):
       gpio.output(LG_ACT_RETRACT, gpio.LOW)
       lg_act_on = 0
 def ch5_state_callback(msg):
-    if msg.data > DEADZONE_HIGH:
+    if msg.data > DEADZONE_HIGH-0.5:
       gpio.output(SM_ACT_EXTEND, gpio.LOW)
       gpio.output(SM_ACT_RETRACT, gpio.HIGH)
-    elif msg.data < DEADZONE_LOW:
+    elif msg.data < DEADZONE_LOW+0.5:
       gpio.output(SM_ACT_RETRACT, gpio.LOW)
       gpio.output(SM_ACT_EXTEND, gpio.HIGH)
     else:

@@ -5,8 +5,8 @@ import RPi.GPIO as gpio
 from datetime import datetime
 from time import sleep, time
 
-CH1 = 3
-CH2 = 7
+CH1 = 35
+CH2 = 33
 
 CUTOFF_MIN = 4
 CUTOFF_MAX = 11
