@@ -3,6 +3,7 @@
     <node name="RosAria" pkg="rosaria" type="RosAria"/>
     <node name="drive_pub" pkg="qbot" type="drive_pub.py"/>
     <node name="controller_pub" pkg="qbot" type ="cntrl_pub.py"/>
+    <node name="sensor_pub" pkg="qbot" type="sensor_pub.py" output="screen"/>
     <node name="drive_controller" pkg="qbot" type="qbot_drive.py" output="screen"/>
     <node name="actuator_motor_controller" pkg="qbot" type="act_motor_sub.py"/>
 </launch>

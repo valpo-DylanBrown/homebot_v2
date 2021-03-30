@@ -169,8 +169,8 @@ if __name__=="__main__":
     rospy.Subscriber('ch1_state', Float32, ch1_state_callback)
     rospy.Subscriber('ch2_state', Float32, ch2_state_callback)
     rospy.Subscriber('ch6_state', Float32, ch6_state_callback)
-    rospy.Subscriber('bl_dist', Float32, bl_dist_callback)
-    rospy.Subscriber('FR_dist', Float32, fr_dist_callback)
+    rospy.Subscriber('bl_sens', Float32, bl_dist_callback)
+    #rospy.Subscriber('FR_dist', Float32, fr_dist_callback)
 
     try:
         pub_thread.wait_for_subscribers()
@@ -183,12 +183,12 @@ if __name__=="__main__":
           else:
               if(BL_dist <= BACK_SENSOR_THRESHOLD):
                 pub_thread.update(0,0)
-                #print("back left triggered: ", BL_dist)
+                print("back left triggered: ", BL_dist)
                 continue
-              if(FR_dist <= FRONT_SENSOR_THRESHOLD):
-                pub_thread.update(0,0)
-                #print("front right triggered")
-                continue
+              # if(FR_dist <= FRONT_SENSOR_THRESHOLD):
+                # pub_thread.update(0,0)
+                # #print("front right triggered")
+                # continue
               else:
                 x = ch2_movement
                 if(x == -1):
