@@ -13,15 +13,15 @@ import signal
 global ch1_movement
 global ch2_movement
 global ch6_enable
-global BL_dist
-global FR_dist
+# global BL_dist
+# global FR_dist
 ch1_movement = 0
 ch2_movement = 0
-BL_dist = 0
-FR_dist = 0
+# BL_dist = 0
+# FR_dist = 0
 ch6_enable = 0
-BACK_SENSOR_THRESHOLD = 60
-FRONT_SENSOR_THRESHOLD = 50
+# BACK_SENSOR_THRESHOLD = 60
+# FRONT_SENSOR_THRESHOLD = 50
 
 def signal_handler(signal, frame): # ctrl + c -> exit program
     print('You pressed Ctrl+C!')
@@ -134,8 +134,6 @@ def ch2_state_callback(msg):
 def ch6_state_callback(msg):
     global ch6_enable
     # 1 = enable, 0 = disable, -1 = override
-    if (msg.data > 10.5) or (msg.data < 4.5):
-        return
     if msg.data > 8.5:
         ch6_enable = 0
     elif msg.data < 6.5:
@@ -143,12 +141,12 @@ def ch6_state_callback(msg):
     else:
         ch6_enable = -1
 # TODO do something with this data.
-def bl_dist_callback(msg):
-    global BL_dist
-    BL_dist = msg.data
-def fr_dist_callback(msg):
-    global FR_dist
-    FR_dist = msg.data
+# def bl_dist_callback(msg):
+    # global BL_dist
+    # BL_dist = msg.data
+# def fr_dist_callback(msg):
+    # global FR_dist
+    # FR_dist = msg.data
 
 if __name__=="__main__":
 
@@ -169,7 +167,7 @@ if __name__=="__main__":
     rospy.Subscriber('ch1_state', Float32, ch1_state_callback)
     rospy.Subscriber('ch2_state', Float32, ch2_state_callback)
     rospy.Subscriber('ch6_state', Float32, ch6_state_callback)
-    rospy.Subscriber('bl_sens', Float32, bl_dist_callback)
+    # rospy.Subscriber('bl_sens', Float32, bl_dist_callback)
     #rospy.Subscriber('FR_dist', Float32, fr_dist_callback)
 
     try:
@@ -181,21 +179,21 @@ if __name__=="__main__":
             #print("ROBOT DISABLED")
             continue
           else:
-              if(BL_dist <= BACK_SENSOR_THRESHOLD):
-                pub_thread.update(0,0)
-                print("back left triggered: ", BL_dist)
-                continue
+              # if(BL_dist <= BACK_SENSOR_THRESHOLD):
+                # pub_thread.update(0,0)
+                # print("back left triggered: ", BL_dist)
+                # continue
               # if(FR_dist <= FRONT_SENSOR_THRESHOLD):
                 # pub_thread.update(0,0)
                 # #print("front right triggered")
                 # continue
-              else:
-                x = ch2_movement
-                if(x == -1):
-                    th = x * ch1_movement
-                else:
-                    th = ch1_movement
-                pub_thread.update(x, th)
+              # else:
+            x = ch2_movement
+            if(x == -1):
+                th = x * ch1_movement
+            else:
+                th = ch1_movement
+            pub_thread.update(x, th)
                 #print("Sensor 1 dist: ", sens1_dist)
     except(KeyboardInterrupt, SystemExit):
         print("requested stop")
